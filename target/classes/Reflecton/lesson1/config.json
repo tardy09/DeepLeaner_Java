@@ -1,0 +1,50 @@
+{
+  "objects": [
+    {
+      "id": "id1",
+      "class": "Reflecton.lesson1.User",
+      "fields":[
+        {
+          "name":"id",
+          "value":1
+        },
+        {
+          "name":"name",
+          "value":"882833832"
+        },
+        {
+          "name":"password",
+          "value":"uu2"
+        }
+      ]
+    },
+    {
+      "id": "id2",
+      "class": "Reflecton.lesson1.Bean",
+      "fields":[
+        {
+          "name":"name",
+          "value":"hhhs"
+        },
+        {
+          "name":"flag",
+          "value":false
+        }
+      ]
+    },
+    {
+     "id":"id3",
+      "class":"Reflecton.lesson1.ComplexBean",
+      "fields":[
+        {
+          "name": "name",
+          "value": "complex-bean-name"
+        },
+        {
+          "name": "refBean",
+          "ref": "id2"
+        }
+      ]
+    }
+  ]
+}

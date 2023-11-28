@@ -1,0 +1,19 @@
+有项目需要传输Map结构的数据，有人倾向用Java序列化来做，有人倾向用JSON的序列化来做。所以我们还是比比吧。
+
+Java观点：Object2Object，使用时简单快速。
+
+JSON观点：JSON格式与语言无关，扩展性强，速度也应该不慢。
+
+大家可能对Java序列化都有一个错误的认识，认为Java序列化比JSON的序列化效率高并且序列化的数据小，其实实际上并不一定是这样，我这次就想通过实际测试来解开这个谜团。
+二、测试方式
+
+测试同一个Map<String,Object>并序列化为byte[]，并再将byte[]反序列化为Map<String,Object>的过程。Object中包括String，Integer，Long，Boolean，Float，Double常规类型的数据。
+
+序列化：Map<String,Object> -> byte[]
+
+反序列化：byte[] -> Map<String,Object>
+
+测试各种大小不同的Map，并循环执行同一操作N次，来得到一个相对稳定的线性结果。
+并不是Java的序列化速度总是最快体积最小，Java需要考虑对象类型，属性类型与内部对象信息等一系列对数据本身并不相关的内容的处理。
+JSON以固定的格式，
+稳定简单的数据结构大大简化了序列化过程，虽然也要创建新的Java数据对象但并不会比Java反序列化的速度慢。

@@ -1,0 +1,1 @@
+关于Arrays的asList方法返回的是一个私有的静态内部类型ArrayList,而非java.util.ArrayList

@@ -1,0 +1,4 @@
+//以上的MyExecutore和MyFuture主要用于演示基本原理，实际上，Java中已经包含了一套完善的框架Executors，相关的部分接口和类有：
+    表示异步结果的接口Future和实现类FutureTask
+    用于执行异步任务的接口Executor、以及有更多功能的子接口ExecutorService
+            用于创建Executor和ExecutorService的工厂方法类Executors

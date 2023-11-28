@@ -1,0 +1,69 @@
+进程的特征：
+1.一个进程就是一个执行过程中的程序，而每一个进程都有自己独立的一块内存空间
+一组系统资源，在进程概念里，每一个系统的内部数据和状态都是完全独立的。
+2.创建并执行一个进程的系统开销是很大的
+3.进程是程序一次执行过程，是系统运行程序的基本单位。
+多线程是指在单个进程里面可以同时运行多个不同的程序，执行不同的任务。
+同类的多个线程是共享一块内存空间和一组系统资源，而
+线程本身的数据通常只有微处理器的寄存器数据，以及一个供程序执行时候使用的堆栈，所以
+系统产生一个线程，或者在各个线程之间切换时，负担要比进程小的多，正因为如此，线程也被称为
+轻负荷进程。一个进程中可以包含多个线程。
+
+    多线程是实现并发机制的一种有效手段，进程和线程一样，都是实现并发的一个基本单位。
+    线程和进程的主要差别主要体现在以下几个方面：
+    1.同样作为基本的执行单元，线程是划分的比进程更小的执行单位
+    2.每个进程都有一段专用内存区域，与此相反，线程却共享内存单元（包括代码和数据），
+    通过共享的单元来实现内存交换、实时通信和必要的同步操作。
+
+    多线程打破了传统的束缚，所谓线程是指程序的运行流程，多线程是指可以同时运行多个程序块，使得程序运行的效率变得更高
+    ，也可以客服传统程序语言无法解决的问题，例如：有些包含循环或者比较耗时的操作时候，此时可以让另一个线程来处理其他事情。
+
+    在类里面激活线程必须要做到两点：
+    1.线程必须扩展至Thread类，使得自己成为它的子类
+    2.线程的处理必须编写在run()方法里面
+
+    实现多线程的方法：
+    1.继承Thread类
+    2.通过实现Runnable接口来实现多线程（推荐）--------由于java只允许单继承，如果java里面一个类继承了一个类
+    同时又想使用多线程技术时候，这时候就可以考虑使用Runnable接口来实现
+   public Thread(Runable target)将一个runnble接口的实例化对象作为参数去实例化Thread类对象。
+   关于Thread类继承和实现Runnable接口的方式比较：用Thread继承的方式实现的多线程实际上无法达到实现资源共享的目的。
+   实现Runnable接口相对于继承Thread类而言，有以下几个显著优势：
+     1.适合多个相同的程序代码线程去处理同一个资源的情况，把虚拟的CPU(线程)同程序的代码、数据有效的加以分离，
+     较好的体现了面向对象的设计思想
+     2.可以克服单继承的局限。
+     3.增强了程序的健壮性，代码能够被多个线程所共享。代码和数据都是独立的，当多个线程
+     的执行代码来自同一个类的实例的时候，即称它们共享相同的代码，。多个线程可以操作相同的数据。和它们的代码没有关系
+     ，当共享访问相同的对象，即共享相同的数据，。当线程被构造的时候，需要的代码和数据通过一个对象
+     作为构造方法实参传递进去，这个对象就是一个实现了Runnable接口的类的实例。
+     线程的状态：任何一个线程一般具有5种状态，即创建，就绪，运行，阻塞，终止，。另外，在给定的时间点上，
+     一个线程只能处于一种状态，
+     public static enum Thread.State
+     extends Enum<Thread.State>
+     A thread state. A thread can be in one of the following states:
+     NEW
+     A thread that has not yet started is in this state.
+     RUNNABLE
+     A thread executing in the Java virtual machine is in this state.
+     BLOCKED
+     A thread that is blocked waiting for a monitor lock is in this state.
+     WAITING
+     A thread that is waiting indefinitely for another thread to perform a particular action is in this state.
+     TIMED_WAITING
+     A thread that is waiting for another thread to perform an action for up to a specified waiting time is in this state.
+     TERMINATED
+     A thread that has exited is in this state.
+   另外，当运行java命令的时候，就启动了一个JVM的进程，默认情况下，此进程会产生
+   两个线程：一个是main()方法的线程，一个是垃圾回收（GC）线程。
+   对Java程序而言；只要有一个前台进程在运行，这个进程就不会结束，如果一个进程里面只有后台线程，那么这个进程就会结束
+   。另外，前台进程是相对于后台进程而言的，如果某个线程对象在启动（启用start（）方法）之前调用了
+   setDaemon(true)方法，这个线程就变成了后台进程。
+   当一个线程运行的时候，另外一个线程就可以调用对应的Thread对象的interupt()方法
+   来中断它。
+     另外，同一个类里面使用synchronized关键字定义的若干方法，可以在多个线程之间
+     进行同步，当有一个线程有了synchronized修饰的时候，其他的线程就不能进入同一个
+     对象使用synchronized修饰的方法，直到一个线程执行完它所进入的synchronized方法为止。
+     死锁：一旦就多个线程，且他们都要争取对多个锁的独占和访问，那么就有可能发生死锁
+     如果有一组进程或者线程，其中每个都在等待一个只有其他进程或者线程才可以进行的操作
+     ，那么就称它们死锁了。
+     要避免死锁就要，就应该保证在获取多个锁的时候，在所有的线程中都以相同的程序获取锁。

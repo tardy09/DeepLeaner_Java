@@ -1,0 +1,5 @@
+我们实现的MyBlockingQueue主要用于演示，Java提供了专门的阻塞队列实现，包括：
+接口BlockingQueue和BlockingDeque
+基于数组的实现类ArrayBlockingQueue
+基于链表的实现类LinkedBlockingQueue和LinkedBlockingDeque
+基于堆的实现类PriorityBlockingQueue

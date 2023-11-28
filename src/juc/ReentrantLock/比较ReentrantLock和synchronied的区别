@@ -1,0 +1,57 @@
+相似点：
+       这两种同步方式有很多相似之处，它们都是加锁方式同步，而且都是阻塞式的同步，也就是说当如果一个线程获得了对象锁，进入了同步块，
+       其他访问该同步块的线程都必须阻塞在同步块外面等待，而进行线程阻塞和唤醒的代价是比较高的（操作系统需要在用户态与内核态之间来回切换，代价很高，不过可以通过对锁优化进行改善）。
+区别：
+      这两种方式最大区别就是对于Synchronized来说，它是java语言的关键字，是原生语法层面的互斥，需要jvm实现。
+      而ReentrantLock它是JDK 1.5之后提供的API层面的互斥锁，需要lock()和unlock()方法配合try/finally语句块来完成。
+1.Synchronized
+    Synchronized进过编译，会在同步块的前后分别形成monitorenter和monitorexit这个两个字节码指令。在执行monitorenter指令时，
+    首先要尝试获取对象锁。如果这个对象没被锁定，或者当前线程已经拥有了那个对象锁，把锁的计算器加1，相应的，在执行monitorexit指令时会将锁计算器就减1，
+    当计算器为0时，锁就被释放了。如果获取对象锁失败，那当前线程就要阻塞，直到对象锁被另一个线程释放为止。
+
+
+2.ReentrantLock
+        由于ReentrantLock是java.util.concurrent包下提供的一套互斥锁，相比Synchronized，ReentrantLock类提供了一些高级功能，主要有以下3项：
+        1.等待可中断，持有锁的线程长期不释放的时候，正在等待的线程可以选择放弃等待，这相当于Synchronized来说可以避免出现死锁的情况。
+        2.公平锁，多个线程等待同一个锁时，必须按照申请锁的时间顺序获得锁，Synchronized锁非公平锁，ReentrantLock默认的构造函数是创建的非公平锁，
+        可以通过参数true设为公平锁，但公平锁表现的性能不是很好。
+        3.锁绑定多个条件，一个ReentrantLock对象可以同时绑定对个对象。
+
+
+
+
+
+
+
+
+
+
+        ReentrantLock对比synchronized
+        相比synchronized，ReentrantLock可以实现与synchronized相同的语义，但还支持以非阻塞方式获取锁、可以响应中断、可以限时等，更为灵活。
+
+        不过，synchronized的使用更为简单，写的代码更少，也更不容易出错。
+
+        synchronized代表一种声明式编程，程序员更多的是表达一种同步声明，由Java系统负责具体实现，程序员不知道其实现细节，显式锁代表一种命令式编程，程序员实现所有细节。
+
+        声明式编程的好处除了简单，还在于性能，在较新版本的JVM上，ReentrantLock和synchronized的性能是接近的，但Java编译器和虚拟机可以不断优化synchronized的实现，比如，自动分析synchronized的使用，对于没有锁竞争的场景，自动省略对锁获取/释放的调用。
+
+        简单总结，能用synchronized就用synchronized，不满足要求，再考虑ReentrantLock。
+
+        同步容器有几个问题：
+        每个方法都需要同步，支持的并发度比较低
+        对于迭代和复合操作，需要调用方加锁，使用比较麻烦，且容易忘记
+
+
+        高并发
+        ConcurrentHashMap是为高并发设计的，它是怎么做的呢？具体实现比较复杂，我们简要介绍其思路，主要有两点：
+        分段锁
+        读不需要锁
+
+        同步容器使用synchronized，所有方法，竞争同一个锁，而ConcurrentHashMap采用分段锁技术，将数据分为多个段，而每个段有一个独立的锁，每一个段相当于一个独立的哈希表，分段的依据也是哈希值，无论是保存键值对还是根据键查找，都先根据键的哈希值映射到段，再在段对应的哈希表上进行操作。
+
+        采用分段锁，可以大大提高并发度，多个段之间可以并行读写。默认情况下，段是16个，不过，这个数字可以通过构造方法进行设置，如下所示：
+        public ConcurrentHashMap(int initialCapacity, float loadFactor, int concurrencyLevel)
+
+        concurrencyLevel表示估计的并行更新的线程个数，ConcurrentHashMap会将该数转换为2的整数次幂，比如14转换为16，25转换为32。
+
+        在对每个段的数据进行读写时，ConcurrentHashMap也不是简单的使用锁进行同步，内部使用了CAS、对一些写采用原子方式，实现比较复杂，我们就不介绍了，实现的效果是，对于写操作，需要获取锁，不能并行，但是读操作可以，多个读可以并行，写的同时也可以读，这使得ConcurrentHashMap的并行度远远大于同步容器。
